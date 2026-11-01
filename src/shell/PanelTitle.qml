@@ -77,7 +77,16 @@ Item {
         id: label
         visible: title.showsText
         anchors.verticalCenter: parent.verticalCenter
-        text: title.text
+        text: {
+            const endsInMnemonic = title.text[title.text.length - 1] === ")" && title.text[title.text.length - 3] === "(";
+
+            if (endsInMnemonic) {
+                return title.text.substring(0, title.text.length - 3);
+            }
+            else {
+                return title.text;
+            }
+        }
         color: title.inkColor
         font.family: title.panel.font.family
         font.pixelSize: title.panel.font.size
