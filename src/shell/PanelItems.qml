@@ -97,9 +97,16 @@ Row {
         }
     }
 
-    function chooseMenuEntry(id) {
+    function chooseMenuEntry(id, menu) {
         if (showsDesktopMenus) {
             runDesktopEntry(id)
+        } else if (menu.isWindowMenu && menu.windowMenuIds.includes(id)) {
+            for (const childMenu of menu.children) {
+                if (childMenu.id == id) {
+                    childMenu.window.activate()
+                    break
+                }
+            }
         } else {
             panel.applicationMenu.activate(id)
         }
@@ -110,13 +117,96 @@ Row {
         }
     }
 
+    function getWindowMenuItems(knownIds = [], getIds = []) {
+        let id = 65535
+        const getNewId = id => {
+            let newId = id - 1
+            while (knownIds.includes(id) && id > 0) {
+                newId--
+            }
+            getIds.push(newId)
+            return newId
+        }
+
+        const items = []
+
+        const activeWindow = ToplevelManager.activeToplevel
+        const windows = ToplevelManager.toplevels.values.filter(
+                window => window.appId === activeWindow.appId)
+        for (let i = 0; i < windows.length; i++) {
+            items.push({
+                id: (id = getNewId(id)),
+                label: windows[i].title,
+                checked: windows[i].activated,
+                enabled: true,
+                window: windows[i]
+            })
+        }
+
+        return items
+    }
+
+    // Processes application menus and merges the window menu stuff
+    function processApplicationMenus(menus) {
+        if (!menus) {
+            return []
+        }
+
+        const result = []
+
+        let hasWindowMenu = false
+        for (const menu of menus) {
+            if (menu.label == "Window" && !hasWindowMenu) {
+                hasWindowMenu = true
+                menu.isWindowMenu = true
+
+                if (!menu.children) {
+                    continue
+                }
+
+                const knownIds = [];
+                for (const menu2 of menus) {
+                    knownIds.push(menu2.id)
+                }
+                const windowMenuItemIds = [] // out
+                const windowMenuItems = getWindowMenuItems(knownIds, windowMenuItemIds)
+                menu.windowMenuIds = windowMenuItemIds
+
+                menu.children.push({
+                    separator: true,
+                })
+
+                for (const windowMenuItem of windowMenuItems) {
+                    menu.children.push(windowMenuItem)
+                }
+            }
+
+            result.push(menu)
+        }
+
+        if (!hasWindowMenu) {
+            const windowMenuItemIds = []
+            const windowMenu = {
+                id: 65536,
+                label: "Window",
+                children: getWindowMenuItems([], windowMenuItemIds),
+                isWindowMenu: true,
+            }
+            windowMenu.windowMenuIds = windowMenuItemIds
+
+            result.splice(-1, 0, windowMenu)
+        }
+
+        return result
+    }
+
     // If the first menu is titled like the application, it is the app's own
     // menu: its entries go under the app name title, and the row starts after it.
     // An app renamed by the user still titles it with its own name.
     // The desktop's first menu is always its own, whatever it is called, so
     // that renaming the desktop (Settings, Desktop) keeps it under the name.
     readonly property var applicationMenus:
-        showsDesktopMenus ? desktopMenuItems : (panel.applicationMenu?.items ?? [])
+        showsDesktopMenus ? desktopMenuItems : (processApplicationMenus(panel.applicationMenu?.items))
     readonly property var ownMenu: {
         if (applicationMenus.length === 0 || activeApplicationName === "") {
             return null
@@ -281,7 +371,7 @@ Row {
                         text: topMenu?.label ?? ""
                         menuItems: topMenu?.children ?? []
                         onOpening: row.menuAboutToShow(topMenu.id)
-                        onChosen: id => row.chooseMenuEntry(id)
+                        onChosen: id => row.chooseMenuEntry(id, topMenu)
                     }
                 }
             }
