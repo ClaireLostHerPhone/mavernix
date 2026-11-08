@@ -1,5 +1,68 @@
 # Changelog
 
+## 0.6.1 (2026-11-06)
+
+### Added
+
+- Press Down in the program switcher to choose one of the marked program's windows, latest first; Up goes back to the programs: Settings, Windows (toggleable, on by default).
+
+### Changed
+
+- The program switcher switches sooner, both on a quick Super+Tab and when you let go of Super.
+- With many programs open, the switcher's icons get smaller so the plate fits on the screen.
+
+### Fixed
+
+- A quick Super+Tab right after closing the switcher with Escape no longer leaves it open.
+- The pointer resting where the switcher appears no longer takes the mark from the keyboard.
+- Plugins in ~/.config/mavernix/wayfire.ini are now added to the desktop's own instead of replacing them.
+
+Log out and back in once after updating.
+
+## 0.6.0 (2026-11-06)
+
+### Added
+
+- Variable refresh rate per screen, for screens that support it: Settings, Displays, For full-screen games or Always (toggleable, off by default).
+- Screens can be turned off: Settings, Displays (toggleable, on by default).
+- The built-in screen can turn off while the lid is closed and another screen is connected: Settings, Energy Saver (toggleable, off by default).
+- Quit can close all of a program's windows, as on OS X: Settings, Windows (toggleable, off by default). A new shortcut, Quit the Program, always does.
+- A click on the front program's Dock icon can minimize its window: Settings, Dock & Menu Bar (toggleable, off by default).
+- Shake the pointer to find it, with a slider for how hard you have to shake: Settings, Mouse (toggleable, off by default).
+- Pasting with the middle button: Settings, Mouse (toggleable, on by default).
+- X11 programs can be drawn sharp on scaled screens: Settings, Displays (toggleable, off by default).
+- Programs can be hidden from the app grid: right-click one there, or App Icons & Names.
+- A pressed notification brings its program to the front, and a banner swiped to the right goes into the notification list.
+- Sliders for the menu bar's transparency, the blur, the Dock's reflections, how long banners stay, how close windows snap, and how far outside a window it can be resized.
+- Each Settings pane has Restore Defaults, and Reset All Settings puts everything back (your old settings are kept in a backup file). Both ask first.
+- Right-click the Dock for Reset to Original Size.
+- Wayfire settings of your own go in ~/.config/mavernix/wayfire.ini.
+
+### Fixed
+
+- Games under Proton, Wine and SDL now open on the screen with the menu bar and offer its resolutions.
+- Full-screen games now open on the screen they ask for.
+- Games in borderless full screen now fill the screen.
+- Steam no longer sticks to the pointer after it shows itself again.
+- X11 programs such as Qt applications now show their menus in the menu bar.
+- Steam's games now show their own name and icon.
+- .icns and .ico pictures chosen as an application's icon no longer look low-res.
+- X11 programs' menus no longer open and close like windows.
+- X11 GTK programs now get the theme's font and pointer.
+- Sea Lion's F3, F4 and F11 no longer go to every X11 program, only to full-screen windows and to Steam's and Minecraft's games. Settings, Keyboard brings back the old way.
+- The notes under Settings' checkboxes now say in one sentence what they change and what you get.
+- A shell stuck repeating one message now starts again on its own, and repeated messages no longer fill the session log.
+
+Log out and back in once after updating.
+
+## 0.5.9 (2026-11-05)
+
+### Fixed
+
+- With more than one screen, the Dock and menu bar no longer disappear or slide aside while desktops switch, when the main screen isn't the one at the top left.
+
+Log out and back in once after updating.
+
 ## 0.5.8 (2026-11-04)
 
 ### Added
