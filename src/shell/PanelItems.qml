@@ -139,7 +139,11 @@ Row {
                 label: windows[i].title,
                 checked: windows[i].activated,
                 enabled: true,
-                window: windows[i]
+                separator: false,
+                checkable: false,
+                shortcut: [],
+                children: [],
+                window: windows[i],
             })
         }
 
